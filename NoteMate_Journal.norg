@@ -1,0 +1,112 @@
+** 2025-04-25 Friday: 
+** ( ) &TODO's&: 
+*** ( ) *Initiate NoteMate*: 
+    You've successfully set up a Python project with an object-oriented modular architecture—quite different from
+    the component-based approach in Next.js, but with some conceptual parallels. Let me explain what we've created:
+    1. ,Project Structure Overview,
+    What you're looking at is a Python package organized into logical modules following the OOP architecture from your document:
+    @code bash
+    .
+    ├── .git/               # Git repository (same as in TypeScript projects)
+    ├── core/               # Core interfaces and models (like "types" or "interfaces" in TS)
+    ├── note_scanner/       # Module for scanning note files (a separate "feature" module)
+    ├── sync/               # Calendar synchronization logic (another feature module)
+    ├── template/           # Template generation module (another feature module)
+    ├── utils/              # Utility functions 
+    ├── main.py             # Application entry point 
+    ├── poetry.lock         # Dependency lock file 
+    ├── pyproject.toml      # Project configuration 
+    └── venv/               # Virtual environment (similar to node_modules, but includes Python)
+    @end
+
+    2. ,dependencies installed with pertry,: 
+    *click* for CLI building
+    *pydantic* for data models
+    *SQLAlchemy* for database ORM
+    *Jinja2* for templating
+    *textblob* for spell checking
+    *APScheduler* for task scheduling
+    *ics.py* and *Google API* client for calendar syncing
+    3. ,Scaffolded the module structure, : 
+    Added directories that correspond to the OOP design in your document, preparing for implementation of different components
+* ( ) re-Initiate NoteMate: 
+  decided to go for lua instead of heavy python scripting
+  notemate will be a plugin managed through lazy and loaded into nvim 
+  the directory set up has been initialized. 
+
+  @code bash 
+  notemate.nvim/
+  ├── plugin/
+  │   └── notemate.lua      # Auto-loaded at startup
+  ├── lua/
+  │   └── notemate/         # Main plugin code
+  │       ├── init.lua      # Entry point
+  │       ├── core/         # Core functionality
+  │       │   ├── event_bus.lua
+  │       │   ├── models.lua
+  │       │   └── db.lua
+  │       └── features/     # Feature modules
+  │           ├── note_scanner/
+  │           │   └── parser.lua
+  │           ├── sync/
+  │           │   └── calendar.lua
+  │           └── template/
+  │               └── generator.lua
+  └── README.md
+
+  @end
+
+** Key Files to Implement First
+   - *lua/notemate/core/event_bus.lua* - Your event system 
+   - *lua/notemate/features/note_scanner/parser.lua* - Implement the note parser that extracts tasks from your notes format
+   - *lua/notemate/features/sync/calendar.lua* - Port your existing Apple Calendar scripts to this module
+
+** set up proper tools for lua development:
+   how to read and handle errors ? 
+   - (x) installed :Trouble to handle errors in lua 
+
+   major Progress: 
+** commit message 1:
+   feat: Initial plugin structure and task management core
+
+   - Created Neovim plugin structure with proper directory layout
+   - Implemented core Task model for representing tasks from notes
+   - Added simple Event Bus for module communication
+   - Developed note scanner/parser to extract tasks from buffer
+   - Prepared Apple Calendar integration structure
+   - Added Neovim commands for scanning tasks and calendar sync
+   - Set up symlinks for local plugin development
+
+   This commit establishes the foundational architecture for the Notemate
+   plugin, following a modular design with event-driven communication. 
+   The plugin can now parse tasks from note files in format:
+*** ( ) &TASK_2&: *Moodle Support*: [15:00-17:00]
+
+    Files:
+    - lua/notemate/core/models.lua
+    - lua/notemate/core/event_bus.lua
+    - lua/notemate/features/note_scanner/parser.lua
+    - lua/notemate/features/sync/calendar.lua
+    - plugin/notemate.lua
+    - lua/notemate/init.lua
+
+** commit message 2: 
+   feat: Implement core task parsing and calendar integration
+
+   - Added Task model for representing structured tasks
+   - Created note scanner that extracts tasks from buffer using pattern matching
+   - Implemented Calendar integration via AppleScript
+   - Set up simple Event Bus for component communication
+   - Added Nvim commands (:NotemateScan, :NotemateSync)
+
+   This commit provides the foundation for parsing tasks from notes in the 
+   format: "*** ( ) &TASK_2&: *Title*: [HH:MM-HH:MM]" and syncing them to 
+   Apple Calendar. The next phase will add database persistence and 
+   bi-directional sync capability.
+
+   Testing:
+   - Verified task parsing from test notes
+   - Successfully synced tasks to Apple Calendar
+   - Commands registered and working as expected
+
+
