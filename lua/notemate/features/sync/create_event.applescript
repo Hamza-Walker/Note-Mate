@@ -1,9 +1,5 @@
 #!/usr/bin/osascript
 
--- create_event.applescript
--- Creates a calendar event with the given parameters
--- Usage: osascript create_event.applescript "Event Title" "YYYY-MM-DD HH:MM" "YYYY-MM-DD HH:MM" "Description"
-
 on run argv
     if (count of argv) < 3 then
         return "Error: Not enough arguments. Need title, start time, and end time."
@@ -32,6 +28,7 @@ on run argv
             -- Create the new event
             tell defaultCal
                 make new event with properties {summary:eventTitle, start date:startDate, end date:endDate, description:eventDescription}
+                save -- THIS IS CRUCIAL
                 return "Event created: " & eventTitle
             end tell
         else

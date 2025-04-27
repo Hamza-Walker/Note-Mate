@@ -10,38 +10,28 @@ function M.get_script_path()
 	return script_dir:joinpath("create_event.applescript").filename
 end
 
+-- In your calendar.lua file:
 function M.sync_task_to_calendar(task)
-	local script_path = M.get_script_path()
+	-- Format date with month name
+	local month_names = {
+		"January", "February", "March", "April", "May", "June",
+		"July", "August", "September", "October", "November", "December"
+	}
+
+	local year, month, day = task.date:match("(%d%d%d%d)-(%d%d)-(%d%d)")
+	local month_name = month_names[tonumber(month)]
+	local formatted_date = day .. " " .. month_name .. " " .. year
 
 	local cmd = string.format(
-		'osascript "%s" "%s" "%s" "%s" "%s"',
+		'osascript "%s" "%s" "%s %s" "%s %s" "%s"',
 		script_path,
 		vim.fn.escape(task.title, '"\\'),
-		task.date .. " " .. task.start_time,
-		task.date .. " " .. task.end_time,
+		formatted_date, task.start_time,
+		formatted_date, task.end_time,
 		vim.fn.escape(task.details or "", '"\\')
 	)
 
-	vim.fn.jobstart(cmd, {
-		on_stdout = function(_, data)
-			if data and #data > 0 then
-				vim.notify(table.concat(data, "\n"))
-			end
-		end,
-		on_stderr = function(_, data)
-			if data and #data > 0 then
-				vim.notify("Error: " .. table.concat(data, "\n"), vim.log.levels.ERROR)
-			end
-		end,
-		on_exit = function(_, exit_code)
-			if exit_code == 0 then
-				vim.notify("Task synced to calendar: " .. task.title)
-				event_bus.publish("task_synced", task)
-			else
-				vim.notify("Failed to sync task to calendar", vim.log.levels.ERROR)
-			end
-		end
-	})
+	-- Rest of function remains the same
 end
 
 -- Get today's calendar events
@@ -82,4 +72,3 @@ function M.get_todays_events(callback)
 end
 
 return M
-
